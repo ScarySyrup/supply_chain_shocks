@@ -12,6 +12,9 @@ parent_direct <- "/Users/josephtarr/Documents/allfed/refactored/refactored_allfe
 unchanged_trucking_capacity <<- read.csv(paste(parent_direct,'data/Truck capacity (1).csv',sep=""))
 unchanged_shipping_capacity <<- read.csv(paste(parent_direct,'data/Port capacity (5).csv',sep=""))
 unchanged_shipping_capacity$ALL.CARGO <- 100*unchanged_shipping_capacity$ALL.CARGO
+getting_rid_of_number <- function(string){
+  return(substr(string,4,nchar(string)))
+}
 
 
 faf <<- read.csv(paste(parent_direct,"data/All freight.csv",sep=""))
@@ -22,13 +25,22 @@ faf$destination_state <-
 
 transport_links <- read.csv(paste(parent_direct,'data/Transport links.csv',sep=""))
 
+truck_transport_links <- transport_links[transport_links$dms_mode == "1-Truck",]
+truck_transport_links$dms_orig <- sapply(truck_transport_links$dms_orig,getting_rid_of_number)
+truck_transport_links$dms_dest <- sapply(truck_transport_links$dms_dest,getting_rid_of_number)
+truck_transport_links <- truck_transport_links[
+  !truck_transport_links$dms_orig %in% c("Washington DC", "Alaska", "Hawaii") &
+    !truck_transport_links$dms_dest %in% c("Washington DC", "Alaska", "Hawaii"),
+]
+truck_transport_links <- truck_transport_links[order(as.numeric(truck_transport_links$Average.distance)),]
 
-basic_states_data_frame <- read.csv("/Users/josephtarr/Documents/allfed/refactored/refactored_allfed/data/basic_states.csv")
+
+basic_states_data_frame <- read.csv(paste(parent_direct,"data/basic_states.csv",sep=""))
 basic_states <- basic_states_data_frame$x
 source(paste(parent_direct,"code/city_to_state.R",sep=""),local=.GlobalEnv)
 source(paste(parent_direct,"code/closest_port_and_rail.R",sep=""),local=.GlobalEnv)
 source(paste(parent_direct,"code/category_of_cargo.R",sep=""),local=.GlobalEnv)
-source(paste(parent_direct,"code/outputs.R"),sep="",local=.GlobalEnv)
+source(paste(parent_direct,"code/outputs.R",sep=""),local=.GlobalEnv)
 
 
 run_shock_for_state <- function(state_name){

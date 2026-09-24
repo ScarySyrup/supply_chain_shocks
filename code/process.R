@@ -51,10 +51,10 @@ try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row
   base_trucking_distance <- as.numeric(base_trucking_distance_options$Average.distance[!is.na(base_trucking_distance_options$Average.distance)])
   
   
-  #capacity_shipping_before_running <<- capacity_shipping
-  #train_car_capacity_before_running <<- train_car_capacity
-  #trucking_capacity_before_running <<- trucking_capacity
-  #rail_capacity_before_running <<- rail_capacity
+  capacity_shipping_before_running <<- capacity_shipping
+  train_car_capacity_before_running <<- train_car_capacity
+  trucking_capacity_before_running <<- trucking_capacity
+  rail_capacity_before_running <<- rail_capacity
   
 
   
@@ -100,8 +100,6 @@ try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row
     }
   }
   if (!found_route){
-    train_car_capacity_before_running <<- train_car_capacity
-    trucking_capacity_before_running <<- trucking_capacity
     rail_capacity_before_running <<- rail_capacity
     
     add_trucking_info(row_index = row_index,
@@ -132,7 +130,6 @@ try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row
     }
   }
   if (!found_route){
-    trucking_capacity_before_running <<- trucking_capacity
     add_trucking_info(row_index = row_index,
                       only_mode = TRUE,
                       distance = base_trucking_distance,

@@ -1,10 +1,6 @@
 closest_operating_port <- function(state,tonnes,shocked_ships,cargo){
-  states_to_ship_from <- transport_links[transport_links$dms_mode == "1-Truck",]
-  states_to_ship_from$dms_orig <- sapply(states_to_ship_from$dms_orig,getting_rid_of_number)
-  states_to_ship_from$dms_dest <- sapply(states_to_ship_from$dms_dest,getting_rid_of_number)
+  states_to_ship_from <- truck_transport_links
   states_to_ship_from <- states_to_ship_from[states_to_ship_from$dms_dest == state,]
-  states_to_ship_from <- states_to_ship_from[!states_to_ship_from$dms_orig %in% c("Washington DC","Alaska","Hawaii")& !states_to_ship_from$dms_dest %in% c("Washington DC","Alaska","Hawaii"),]
-  states_to_ship_from <- states_to_ship_from[order(as.numeric(states_to_ship_from$Average.distance)),]
   if (shocked_ships == TRUE){
     states_to_ship_from <- states_to_ship_from[!states_to_ship_from$dms_orig == state,]
   }
@@ -19,13 +15,8 @@ closest_operating_port <- function(state,tonnes,shocked_ships,cargo){
 }
 
 closest_operating_rail <- function(state,tonnes,shocked_rail,cargo){
-  states_to_rail_from <- transport_links[transport_links$dms_mode == "1-Truck",]
-  states_to_rail_from$dms_orig <- sapply(states_to_rail_from$dms_orig,getting_rid_of_number)
-  states_to_rail_from$dms_dest <- sapply(states_to_rail_from$dms_dest,getting_rid_of_number)
+  states_to_rail_from <- truck_transport_links
   states_to_rail_from <- states_to_rail_from[states_to_rail_from$dms_orig == state,]
-
-  states_to_rail_from <- states_to_rail_from[(!states_to_rail_from$dms_orig %in% c("Washington DC","Alaska","Hawaii")& !states_to_rail_from$dms_dest %in% c("Washington DC","Alaska","Hawaii")),]
-  states_to_rail_from <- states_to_rail_from[order(as.numeric(states_to_rail_from$Average.distance)),]
   if (shocked_rail == TRUE){
     states_to_rail_from <- states_to_rail_from[!states_to_rail_from$dms_dest == state,]
   }

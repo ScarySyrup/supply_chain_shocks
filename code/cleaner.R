@@ -11,10 +11,6 @@ shocked_things <- c(shocked_things,"5-Multiple modes & mail")
 cleaned_faf <- filter(faf,dms_mode %in% shocked_things)
 
 
-getting_rid_of_number <- function(string){
-  return(substr(string,4,nchar(string)))
-}
-
 
 
 cleaned_faf <- relocate(cleaned_faf,origin_state,destination_state)
