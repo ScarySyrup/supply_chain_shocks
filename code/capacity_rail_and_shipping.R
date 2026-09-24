@@ -1,8 +1,8 @@
 capacity_shipping <<- read.csv(paste(parent_direct,'data/Port capacity (5).csv',sep=""))
 capacity_shipping$ALL.CARGO <- 100*capacity_shipping$ALL.CARGO
-train_car_capacity <<- read.csv('/Users/josephtarr/Documents/allfed/refactored/refactored_allfed/data/Train car capacity.csv')
+train_car_capacity <<- read.csv(paste(parent_direct,'data/Train car capacity.csv',sep=""))
 train_car_capacity <- train_car_capacity[1:3,]
-trucking_capacity <<- read.csv('/Users/josephtarr/Documents/allfed/refactored/refactored_allfed/data/Truck capacity (1).csv')
+trucking_capacity <<- read.csv(paste(parent_direct,'data/Truck capacity (1).csv',sep=""))
 
 
 
