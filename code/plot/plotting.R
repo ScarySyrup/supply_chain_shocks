@@ -1,6 +1,6 @@
 library(ggplot2)
 scale_factor <- max(outputs$tonne_mile_trucking_increase / 1e9)
-
+print(
 ggplot(outputs, aes(reorder(states, tonne_mile_trucking_increase))) +
   geom_col(aes(y = tonne_mile_trucking_increase / 1e9, fill = "Tonne-mile increase (billions)")) +
   geom_line(
@@ -48,4 +48,4 @@ ggplot(outputs, aes(reorder(states, tonne_mile_trucking_increase))) +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1),
     legend.position = "right"
-  )
+  ))
