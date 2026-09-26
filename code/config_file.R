@@ -18,3 +18,10 @@ parent_direct <- "/Users/josephtarr/Documents/allfed/refactored/refactored_allfe
 
 #This runs the model for each state
 source(paste(parent_direct,"code/master.R",sep=""),local=.GlobalEnv)
+
+
+
+
+#This plots the output
+source(paste(parent_direct,"code/plotting/plotting.R",sep=""))
+
