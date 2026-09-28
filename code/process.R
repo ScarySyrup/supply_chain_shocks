@@ -46,9 +46,8 @@ reset_capacities_and_row <- function(row_index){
 try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row_index){
   found_route <<- FALSE
   
-  base_trucking_distance_options <- truck_transport_links[
-    truck_transport_links$dms_orig == dest_state &
-      truck_transport_links$dms_dest == orig_state, ]
+  base_trucking_distance_options <- transport_links[transport_links$dms_mode=="1-Truck",]
+  base_trucking_distance_options <- base_trucking_distance_options[getting_rid_of_number(transport_links$dms_orig)==dest_state&getting_rid_of_number(transport_links$dms_dest)==orig_state,]
   base_trucking_distance <- as.numeric(base_trucking_distance_options$Average.distance[!is.na(base_trucking_distance_options$Average.distance)])
   
   
@@ -213,18 +212,20 @@ add_rail_info <- function(row_index,dest_state,orig_state,cargo,tonnes,distance)
     }
 
 }
-if (nrow(processing_faf) > 0){
-  for (i1 in 1:nrow(processing_faf)){
-    cargo <- processing_faf$sctg2[i1]
-    orig_state <- processing_faf$origin_state[i1]
-    dest_state <- processing_faf$destination_state[i1]
-    tonnes <- processing_faf$thousand.tons.in.2023[i1]*1000
-      if (processing_faf$Export.import.[i1] %in% c("Export","Import")){
-        try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
-          
-      }
-      else if (processing_faf$Export.import.[i1] %in% c("Domestic")){
-        try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
-      }
+
+
+for (i1 in 1:nrow(processing_faf)){
+  cargo <- processing_faf$sctg2[i1]
+  orig_state <- processing_faf$origin_state[i1]
+  dest_state <- processing_faf$destination_state[i1]
+  tonnes <- processing_faf$thousand.tons.in.2023[i1]*1000
+  if (nrow(processing_faf) > 0){
+    if (processing_faf$Export.import.[i1] %in% c("Export","Import")){
+      try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
+        
     }
+    else if (processing_faf$Export.import.[i1] %in% c("Domestic")){
+      try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
+    }
+  }
 }
