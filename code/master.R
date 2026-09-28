@@ -30,7 +30,6 @@ truck_transport_links <- truck_transport_links[order(as.numeric(truck_transport_
 
 basic_states_data_frame <- read.csv(paste(parent_direct,"data/basic_states.csv",sep=""))
 basic_states <- basic_states_data_frame$x
-source(paste(parent_direct,"code/city_to_state.R",sep=""),local=.GlobalEnv)
 source(paste(parent_direct,"code/closest_port_and_rail.R",sep=""),local=.GlobalEnv)
 source(paste(parent_direct,"code/category_of_cargo.R",sep=""),local=.GlobalEnv)
 source(paste(parent_direct,"code/outputs.R",sep=""),local=.GlobalEnv)

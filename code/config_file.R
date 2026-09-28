@@ -14,7 +14,7 @@ Inland_ships <<- TRUE
 Include_multi_mode <<- FALSE
 options(scipen=999)
 
-parent_direct <- "/Users/josephtarr/Documents/allfed/supply_chain_shocks/"
+parent_direct <- "/Users/josephtarr/Documents/supply_chain_shocks/"
 #eg  "/Users/josephtarr/Documents/supply_chain_shocks/"
 
 
