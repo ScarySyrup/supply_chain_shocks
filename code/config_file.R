@@ -14,7 +14,9 @@ Inland_ships <<- TRUE
 Include_multi_mode <<- FALSE
 options(scipen=999)
 
-parent_direct <- "/Users/josephtarr/Documents/allfed/refactored/refactored_allfed/"
+parent_direct <- "/Users/josephtarr/Documents/supply_chain_shocks/"
+#eg  "/Users/josephtarr/Documents/supply_chain_shocks/"
+
 
 #This runs the model for each state
 source(paste(parent_direct,"code/master.R",sep=""),local=.GlobalEnv)
@@ -22,6 +24,8 @@ source(paste(parent_direct,"code/master.R",sep=""),local=.GlobalEnv)
 
 
 
+
+
 #This plots the output
-source(paste(parent_direct,"code/plotting/plotting.R",sep=""))
+source(paste(parent_direct,"code/plot/plotting.R",sep=""))
 

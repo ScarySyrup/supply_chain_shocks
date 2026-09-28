@@ -11,5 +11,5 @@ while (total_weight<0.98*total) {
   counter <- counter + 1
   
 }
-processing_faf <- processing_faf[1:counter,]
+processing_faf <- processing_faf[1:(counter-1),]
 write.csv(processing_faf,paste(parent_direct,"data/cleaned_faf.csv",sep=""))

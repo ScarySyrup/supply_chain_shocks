@@ -46,8 +46,9 @@ reset_capacities_and_row <- function(row_index){
 try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row_index){
   found_route <<- FALSE
   
-  base_trucking_distance_options <- transport_links[transport_links$dms_mode=="1-Truck",]
-  base_trucking_distance_options <- base_trucking_distance_options[getting_rid_of_number(transport_links$dms_orig)==dest_state&getting_rid_of_number(transport_links$dms_dest)==orig_state,]
+  base_trucking_distance_options <- truck_transport_links[
+    truck_transport_links$dms_orig == dest_state &
+      truck_transport_links$dms_dest == orig_state, ]
   base_trucking_distance <- as.numeric(base_trucking_distance_options$Average.distance[!is.na(base_trucking_distance_options$Average.distance)])
   
   
