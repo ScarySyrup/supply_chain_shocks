@@ -4,7 +4,7 @@ closest_operating_port <- function(state,tonnes,shocked_ships,cargo){
   if (shocked_ships == TRUE){
     states_to_ship_from <- states_to_ship_from[!states_to_ship_from$dms_dest %in% STATE,]
   }
-  for (k in 1:nrow(states_to_ship_from)){
+  for (k in seq_len(nrow(states_to_ship_from))){
     port <- states_to_ship_from$dms_dest[k]
     if (capacity_shipping[getting_rid_of_number(capacity_shipping$SURPLUS....000.tonnes)==port,type_of_cargo("ship",cargo)+1]- tonnes > 0){
       return(c(port = as.character(states_to_ship_from$dms_dest[k]), distance = as.character(states_to_ship_from$Average.distance[k])))
@@ -20,7 +20,7 @@ closest_operating_rail <- function(state,tonnes,shocked_rail,cargo){
   if (shocked_rail == TRUE){
     states_to_rail_from <- states_to_rail_from[!states_to_rail_from$dms_dest %in% STATE,]
   }
-  for (i2 in 1:nrow(states_to_rail_from)){
+  for (i2 in seq_len(nrow(states_to_rail_from))){
     station <- states_to_rail_from$dms_dest[i2]
     if (rail_capacity[basic_states==station]- tonnes > 0){
       return(c(station = as.character(states_to_rail_from$dms_dest[i2]), distance = as.character(states_to_rail_from$Average.distance[i2])))

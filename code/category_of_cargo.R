@@ -8,7 +8,7 @@ type_of_cargo <- function(train_or_truck,cargo){
           return("Tank")
         }
     }
-    else if (cargo %in% c("23-Chemical prods.","05-Meat/seafood")){
+    else if (cargo %in% c("01-Live animals/fish","05-Meat/seafood")){
       if (train_or_truck == "train"){
         return("Box")
       }
