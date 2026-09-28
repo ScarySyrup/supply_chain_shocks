@@ -1,6 +1,6 @@
 closest_operating_port <- function(state,tonnes,shocked_ships,cargo){
   states_to_ship_from <- truck_transport_links
-  states_to_ship_from <- states_to_ship_from[states_to_ship_from$dms_dest %in% state,]
+  states_to_ship_from <- states_to_ship_from[states_to_ship_from$dms_orig %in% state,]
   if (shocked_ships == TRUE){
     states_to_ship_from <- states_to_ship_from[!states_to_ship_from$dms_orig %in% state,]
   }
