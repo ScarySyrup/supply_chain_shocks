@@ -213,20 +213,18 @@ add_rail_info <- function(row_index,dest_state,orig_state,cargo,tonnes,distance)
     }
 
 }
-
-
-for (i1 in 1:nrow(processing_faf)){
-  cargo <- processing_faf$sctg2[i1]
-  orig_state <- processing_faf$origin_state[i1]
-  dest_state <- processing_faf$destination_state[i1]
-  tonnes <- processing_faf$thousand.tons.in.2023[i1]*1000
-  if (nrow(processing_faf) > 0){
-    if (processing_faf$Export.import.[i1] %in% c("Export","Import")){
-      try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
-        
+if (nrow(processing_faf) > 0){
+  for (i1 in 1:nrow(processing_faf)){
+    cargo <- processing_faf$sctg2[i1]
+    orig_state <- processing_faf$origin_state[i1]
+    dest_state <- processing_faf$destination_state[i1]
+    tonnes <- processing_faf$thousand.tons.in.2023[i1]*1000
+      if (processing_faf$Export.import.[i1] %in% c("Export","Import")){
+        try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
+          
+      }
+      else if (processing_faf$Export.import.[i1] %in% c("Domestic")){
+        try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
+      }
     }
-    else if (processing_faf$Export.import.[i1] %in% c("Domestic")){
-      try_ship_then_rail_then_truck(cargo,dest_state,orig_state,tonnes,i1)
-    }
-  }
 }
