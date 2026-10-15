@@ -26,7 +26,13 @@ type_of_cargo <- function(train_or_truck,cargo){
         return("Other")
       }
       if (train_or_truck == "train"){
-        return("Box")
+        if (cargo %in% c("15-Coal","02-Cereal grains")){
+          return("Bulk")
+        }
+        else{
+          return("Box")
+        }
+        
       }
     }
   }

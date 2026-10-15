@@ -1,9 +1,24 @@
 coastal_regions <- read.csv(paste(parent_direct,"data/Coastal regions.csv",sep=""))
+source(paste(parent_direct,"code/capacity_rail_and_shipping.R",sep = ""),local=.GlobalEnv)
 unchanged_trucking_capacity <<- read.csv(paste(parent_direct,'data/Truck capacity (1).csv',sep=""))
 unchanged_shipping_capacity <<- read.csv(paste(parent_direct,'data/Port capacity (5).csv',sep=""))
-unchanged_shipping_capacity$ALL.CARGO <- 100*unchanged_shipping_capacity$ALL.CARGO
+unchanged_rail_capacity <<- rail_capacity
+
+unchanged_shipping_capacity <- capacity_shipping
+
+
 getting_rid_of_number <- function(string){
   return(substr(string,4,nchar(string)))
+}
+
+sum_of_dataframe <- function(dataframe){
+  total_size <- 0
+  for (i8 in 1:nrow(dataframe)){
+    if (is.numeric(dataframe[1,i8])){
+      total_size <- total_size + sum(dataframe[i8])
+    }
+  }
+  return(total_size)
 }
 
 
@@ -37,6 +52,7 @@ source(paste(parent_direct,"code/outputs.R",sep=""),local=.GlobalEnv)
 
 run_shock_for_state <- function(state_name){
   STATE <<- state_name
+  state_index <<- which(basic_states == state_name)
   print(STATE)
   source(paste(parent_direct,"code/cleaner.R",sep=""),local=.GlobalEnv)
   source(paste(parent_direct,"code/process.R",sep=""),local=.GlobalEnv)
@@ -48,8 +64,9 @@ run_shock_for_state <- function(state_name){
   
 }
 
-
-for (state_index in 1:length(basic_states)){
-  run_shock_for_state(basic_states[state_index])
-  
+run_for_all <- function(){
+  for (state_index in 1:length(basic_states)){
+    run_shock_for_state(basic_states[state_index])
+    
+  }
 }

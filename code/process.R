@@ -1,16 +1,20 @@
 library(dplyr)
 processing_faf <<- read.csv(paste(parent_direct,"data/cleaned_faf.csv",sep=""))
 
+
+
 source(paste(parent_direct,"code/capacity_rail_and_shipping.R",sep = ""),local=.GlobalEnv)
 processing_faf$shocked_mode <- rep(NA,nrow(processing_faf))
 processing_faf$trucking_distance <- rep(NA,nrow(processing_faf))
 processing_faf$Outward_port_or_rail <- rep(NA,nrow(processing_faf))
 processing_faf$Inward_port_or_rail <- rep(NA,nrow(processing_faf))
+processing_faf$truck_type <- rep(NA,nrow(processing_faf))
 processing_faf$number_of_trucks_first_leg <- rep(NA,nrow(processing_faf))
 processing_faf$number_of_trucks_second_leg <- rep(NA,nrow(processing_faf))
 processing_faf$train_car_type <- rep(NA,nrow(processing_faf))
 processing_faf$num_of_train_cars <- rep(NA,nrow(processing_faf))
 
+processing_faf <<- processing_faf[order(as.numeric(processing_faf$Distance)),] 
 
 some_variable_out_of_bounds <- function(){
   if (any(is.na(trucking_capacity$Surplus.trucks...20.ton.capacity)) | any(trucking_capacity$Surplus.trucks...20.ton.capacity<0)){
@@ -35,6 +39,7 @@ reset_capacities_and_row <- function(row_index){
   processing_faf$trucking_distance[row_index] <<- NA
   processing_faf$Outward_port_or_rail[row_index] <<- NA
   processing_faf$Inward_port_or_rail[row_index] <<- NA
+  processing_faf$truck_type[row_index] <<- NA
   processing_faf$number_of_trucks_first_leg[row_index] <<- NA
   processing_faf$number_of_trucks_second_leg[row_index] <<- NA
   processing_faf$train_car_type[row_index] <<- NA
@@ -44,8 +49,7 @@ reset_capacities_and_row <- function(row_index){
 }
 
 try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row_index){
-  found_route <<- FALSE
-  
+found_route <<- FALSE
   base_trucking_distance_options <- truck_transport_links[
     truck_transport_links$dms_orig == dest_state &
       truck_transport_links$dms_dest == orig_state, ]
@@ -62,7 +66,8 @@ try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row
   
   closest_port_in <- closest_operating_port(orig_state,tonnes,Shock_ships,cargo)
   closest_port_out <- closest_operating_port(dest_state,tonnes,Shock_ships,cargo)
-  if (!found_route){
+
+  if ((!found_route)&JONES_ACT == FALSE){
     
     
     add_trucking_info(row_index = row_index,
@@ -94,6 +99,8 @@ try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row
       found_route <<- TRUE
     }
   }
+
+  
   if (!found_route){
     closest_rail_in <- closest_operating_rail(orig_state,tonnes,Shock_rail,cargo)
     closest_rail_out <- closest_operating_rail(dest_state,tonnes,Shock_rail,cargo)
@@ -105,7 +112,7 @@ try_ship_then_rail_then_truck <- function(cargo,dest_state,orig_state,tonnes,row
                       cargo = cargo
     )
     add_trucking_info(row_index = row_index,
-                      only_mode = TRUE,
+                      only_mode = FALSE,
                       distance = as.numeric(closest_rail_out["distance"]),
                       tonnes = tonnes,
                       cargo = cargo
@@ -157,16 +164,20 @@ add_trucking_info <- function(row_index,only_mode,distance,tonnes,cargo){
     processing_faf$shocked_mode[row_index] <<- "Trucking only"
     processing_faf$trucking_distance[row_index] <<- distance
     processing_faf$number_of_trucks_first_leg[row_index] <<- truck_no
+    processing_faf$truck_type[row_index] <<- type_of_cargo("truck",cargo)
     trucking_capacity$Surplus.trucks...20.ton.capacity[trucking_capacity$Cargo.type == type_of_cargo("truck",cargo)] <<- trucking_capacity$Surplus.trucks...20.ton.capacity[trucking_capacity$Cargo.type == type_of_cargo("truck",cargo)] - truck_no
-  }
+    
+    }
   if (only_mode == FALSE){
     if (is.na(processing_faf$number_of_trucks_first_leg[row_index])){
       processing_faf$number_of_trucks_first_leg[row_index] <<- truck_no
       processing_faf$trucking_distance[row_index] <<- distance
+      processing_faf$truck_type[row_index] <<- type_of_cargo("truck",cargo)
       trucking_capacity$Surplus.trucks...20.ton.capacity[trucking_capacity$Cargo.type == type_of_cargo("truck",cargo)] <<- trucking_capacity$Surplus.trucks...20.ton.capacity[trucking_capacity$Cargo.type == type_of_cargo("truck",cargo)] - truck_no
     }else{
       processing_faf$number_of_trucks_second_leg[row_index] <<- truck_no
       processing_faf$trucking_distance[row_index] <<- processing_faf$trucking_distance[row_index]+distance
+      processing_faf$truck_type[row_index] <<- type_of_cargo("truck",cargo)
       trucking_capacity$Surplus.trucks...20.ton.capacity[trucking_capacity$Cargo.type == type_of_cargo("truck",cargo)] <<- trucking_capacity$Surplus.trucks...20.ton.capacity[trucking_capacity$Cargo.type == type_of_cargo("truck",cargo)] - truck_no
     }
   }
@@ -174,9 +185,6 @@ add_trucking_info <- function(row_index,only_mode,distance,tonnes,cargo){
 
 
 add_shipping_info <- function(row_index,dest_state,orig_state,cargo,tonnes){
-  
-  
-  
   processing_faf$Outward_port_or_rail[row_index] <<- orig_state
   processing_faf$Inward_port_or_rail[row_index] <<- dest_state
   processing_faf$shocked_mode[row_index] <<- "Ship and truck"
@@ -185,6 +193,8 @@ add_shipping_info <- function(row_index,dest_state,orig_state,cargo,tonnes){
   row2 <- getting_rid_of_number(capacity_shipping$SURPLUS....000.tonnes) %in% orig_state
   capacity_shipping[row1,column] <<- capacity_shipping[row1,column] - (tonnes)
   capacity_shipping[row2,column] <<- capacity_shipping[row2,column] - (tonnes)
+  
+  
   }
 
 add_rail_info <- function(row_index,dest_state,orig_state,cargo,tonnes,distance){

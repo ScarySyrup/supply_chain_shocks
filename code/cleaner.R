@@ -4,7 +4,9 @@ basic_states_data_frame <- read.csv(paste(parent_direct,"data/basic_states.csv",
 basic_states <- basic_states_data_frame$x
 
 
-
+if ("3-Water" %in% shocked_things){
+  water_stuff <- filter(processing_faf,Import.export.method.!="x",origin_state==STATE|destination_state==STATE)
+}
 
 shocked_things <- c((if (Shock_ships) "3-Water" else NULL),(if (Shock_pipes) "6-Pipeline" else NULL),(if (Shock_rail) "2-Rail" else NULL))
 if (Include_multi_mode){

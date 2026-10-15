@@ -35,8 +35,8 @@ if (pipeline_shocked %in% c("Transco (Transcontinental)")){
 
 #
 
-
-processing_faf <<- filter(specific_pipeline_faf,(dms_orig %in% unlist(active_system_states)|dms_dest %in% unlist(active_system_states)))
+processing_faf <- processing_faf[order(processing_faf$Distance)]
+processing_faf <<- filter(specific_pipeline_faf,(dms_orig %in% unlist(active_system_states)&dms_dest %in% unlist(active_system_states)))
 write.csv(processing_faf,paste(parent_direct,"data/cleaned_faf.csv",sep=""))
 
 
